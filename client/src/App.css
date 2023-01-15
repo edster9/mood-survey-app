@@ -1,0 +1,8 @@
+.header {
+	text-align: center;
+}
+
+.react-datepicker__input-container input {
+	display: block;
+	width: 100% !important;
+}
