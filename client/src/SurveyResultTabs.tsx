@@ -9,12 +9,21 @@ export interface SurveyResultProps {
 	peopleAgeCompare: PeopleAgeCompare
 }
 
+/**
+ * Render the tabs for the mood survey result
+ *
+ * @param {SurveyResultProps} props
+ * @returns SurveyResultTabs
+ */
 const SurveyResultTabs = (props: SurveyResultProps) => {
 	const [key, setKey] = useState('last-survey')
 
+	/**
+	 * Render the individual mood survey result tabs
+	 *
+	 * @returns
+	 */
 	const renderTabs = () => {
-		//console.log('props', props.peopleAgeCompare)
-
 		const person = props.peopleAgeCompare.person
 		const previousSurvey = props.peopleAgeCompare.previousSurvey
 		const ownAgeGroup = props.peopleAgeCompare.ownAgeGroup
@@ -118,6 +127,7 @@ const SurveyResultTabs = (props: SurveyResultProps) => {
 			</Tabs>
 		)
 	}
+
 	return (
 		<>
 			<h3>Mood Survey Result</h3>

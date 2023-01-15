@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-
+import axios from 'axios'
 import Container from 'react-bootstrap/Container'
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
@@ -8,24 +8,39 @@ import DatePicker from 'react-datepicker'
 import SurveyResultTabs from './SurveyResultTabs'
 import { PeopleAgeCompare } from './types'
 
-import axios from 'axios'
 import './App.css'
 
+/**
+ * Main mood survey app responsible for rending a form
+ * and collecting the mood survey date with validation
+ * and displaying the result (or error)
+ *
+ * @returns App
+ */
 function App() {
-	const [showError, setShowError] = useState('')
+	// form fields
 	const [fullName, setFullName] = useState('')
 	const [birthday, setBirthday] = useState<Date | null | undefined>()
 	const [happyScale, setHappyScale] = useState('')
 	const [energyScale, setEnergyScale] = useState('')
 	const [hopefulnessScale, setHopefulnessScale] = useState('')
 	const [sleepHours, setSleepHours] = useState('')
+	// survey result
 	const [surveyResult, setSurveyResult] = useState<
 		PeopleAgeCompare | undefined
 	>()
+	// error display
+	const [showError, setShowError] = useState('')
 
+	/**
+	 * Form submit handler
+	 *
+	 * @param event
+	 */
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 
+		// prepare the form submit data
 		const surveyData = {
 			fullName,
 			birthday: birthday?.toISOString(),
@@ -35,6 +50,7 @@ function App() {
 			sleepHours: parseInt(sleepHours),
 		}
 
+		// make the form submit API call
 		axios
 			.post<PeopleAgeCompare>('/people/survey', surveyData)
 			.then((result) => {
@@ -49,9 +65,9 @@ function App() {
 
 				// Switch to result screen
 				setSurveyResult(result.data)
-				//console.log(result.data)
 			})
 			.catch((error) => {
+				// display errors if any
 				if (error.response && error.response.data) {
 					setShowError(error.response.data)
 				} else {
@@ -60,6 +76,11 @@ function App() {
 			})
 	}
 
+	/**
+	 * Render the mood survey form
+	 *
+	 * @returns
+	 */
 	const renderSurveyForm = () => {
 		return (
 			<>
@@ -202,6 +223,11 @@ function App() {
 		)
 	}
 
+	/**
+	 * Render the survey result section
+	 *
+	 * @returns
+	 */
 	const renderSurveyResult = () => {
 		if (!surveyResult) return null
 
@@ -219,6 +245,7 @@ function App() {
 		)
 	}
 
+	// render the main APP content
 	return (
 		<Container className="p-3">
 			<Container className="p-5 mb-4 bg-light rounded-3">
