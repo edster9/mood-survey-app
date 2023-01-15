@@ -2,9 +2,9 @@
 
 ## Introduction
 
-This project will present a user with a mood survey questionnaire, capable of capturing their state of mind and storing data on the backend.
+This project will present a user with a mood survey questionnaire, capable of capturing their state of mind and storing the data on the backend.
 
-The survey result will be compare to previous enteries by the user as well as compared to all other people in the same age group.
+The survey result will be compared to the previous enteries by the user as well as compared to all other people in the same age group.
 
 ### Tech Stack
 
@@ -30,20 +30,33 @@ The project can be cloned from GitHub for free with the following command
 ```bash
 git clone git@github.com:edster9/mood-survey-app.git
 
+# run backend and frontend together
 cd mood-survey-app
 yarn run install:dep
 yarn dev
+
+# OR (individually)
+
+# run backend
+cd mood-survey-app
+yarn
+yarn server:dev
+
+# run backend
+cd mood-survey-app/client
+yarn
+yarn start
 ```
 
-### Design considerations
+## Design considerations
 
 Data is stored to a local sqlite database with two tables. The frontend ReactJS client will post to the ExpressJS backend via a REST API everytime there is a new mood survey request.
 
-#### Database Tables (ERD)
+### Database Tables (ERD)
 
 ```mermaid
 erDiagram
-    PEOPLE ||--|{ SURVEY : contains
+    PEOPLE ||--|{ SURVEY : appends
     PEOPLE {
         INTEGER id PK
         TEXT fullName
