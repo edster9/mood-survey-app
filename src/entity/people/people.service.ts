@@ -8,9 +8,17 @@ import {
 	Survey,
 } from './types'
 
+/**
+ * Find a person by id
+ *
+ * @param {number} id
+ * @returns People
+ */
 const getOne = async (id: number) => {
+	// get a database connection
 	const db = await openDb()
 
+	// query the people table and search by id
 	const person: People | undefined = await db.get(
 		`SELECT 
 			id, fullName, birthday, lastSurveyTime,
@@ -22,33 +30,51 @@ const getOne = async (id: number) => {
 		id,
 	)
 
-	// Calculate person age
+	// calculate person age
 	if (person) {
 		const birthday = DateTime.fromISO(person.birthday)
 		person.age = Math.abs(Math.floor(birthday.diffNow('years').years)) - 1
 	}
 
+	// return the Person object
 	return person
 }
 
+/**
+ * Delete a person and all survey logs by id
+ *
+ * @param {number} id
+ */
 const removeOne = async (id: number) => {
+	// get a database connection
 	const db = await openDb()
 
+	// delete all the survey logs for this person
 	await db.run('DELETE FROM servey WHERE peopleId = :id', {
 		':id': id,
 	})
 
+	// delete the person record
 	await db.run('DELETE FROM people WHERE id = :id', {
 		':id': id,
 	})
 }
 
+/**
+ * Collect a new mood survey
+ *
+ * @param {PeopleSurveyDto} survey
+ * @returns PeopleAgeCompare
+ */
 const peopleSurvey = async (survey: PeopleSurveyDto) => {
+	// get a database connection
 	const db = await openDb()
 
 	let peopleId = 0
+	// mark the current time
 	const surveyTime = DateTime.now().toISO()
 
+	// does the current person already exists?
 	const result: People | undefined = await db.get(
 		'SELECT * FROM people WHERE fullName = :fullName AND birthday = :birthday',
 		{
@@ -58,6 +84,7 @@ const peopleSurvey = async (survey: PeopleSurveyDto) => {
 	)
 
 	if (!result) {
+		// If the person does not exists then create a new row in the person table
 		const insertPeopleResult = await db.run(
 			`INSERT INTO people
 				(
@@ -96,13 +123,12 @@ const peopleSurvey = async (survey: PeopleSurveyDto) => {
 			},
 		)
 
+		// get the new person id
 		if (insertPeopleResult.lastID) {
 			peopleId = insertPeopleResult.lastID
 		}
 	} else {
-		peopleId = result.id
-
-		// update People table
+		// if the person already exists then update the table with latest survey data
 		result.happyCount++
 		result.happyAggregate += survey.happyScale
 		result.happyAverage = Math.round(result.happyAggregate / result.happyCount)
@@ -123,6 +149,10 @@ const peopleSurvey = async (survey: PeopleSurveyDto) => {
 		result.sleepAggregate += survey.sleepHours
 		result.sleepAverage = Math.round(result.sleepAggregate / result.sleepCount)
 
+		// get the current person id
+		peopleId = result.id
+
+		// update the database with new survey data
 		await db.run(
 			`UPDATE people SET
 					happyScale = :happyScale,
@@ -167,6 +197,7 @@ const peopleSurvey = async (survey: PeopleSurveyDto) => {
 		)
 	}
 
+	// insert into survey logs
 	await db.run(
 		`INSERT INTO survey
 			(
@@ -186,47 +217,43 @@ const peopleSurvey = async (survey: PeopleSurveyDto) => {
 		},
 	)
 
+	// compare the age groups and retrun the data
 	return compareByAge(peopleId)
 }
 
+/**
+ * Compare a person to others in the same age group
+ *
+ * @param {number} id
+ * @returns PeopleAgeCompare
+ */
 const compareByAge = async (
 	id: number,
 ): Promise<PeopleAgeCompare | undefined> => {
+	// get a database connection
 	const db = await openDb()
 
+	// find the existing person
 	const person = await getOne(id)
 
 	if (!person) {
 		return
 	}
 
-	const ageCompareTo = DateTime.now()
-		.minus({ years: person.age })
-		.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-	//console.log('compare years to', ageCompareTo.toString())
-
+	// calculate the age from compare from the givin person's age
 	const ageCompareFrom = DateTime.now()
 		.minus({ years: person.age + 1 })
 		.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
 	//console.log('compare years from', ageCompareFrom.toString())
 
-	// const rawAverages = await db.all(
-	// 	`SELECT
-	// 		id,
-	// 		happyAverage,
-	// 		energyAverage,
-	// 		hopefulnessAverage,
-	// 		sleepAverage
-	// 		FROM people WHERE birthday >= :from AND birthday <= :to
-	// 		AND id != :id`,
-	// 	{
-	// 		':id': id,
-	// 		':from': ageCompareFrom.toISODate(),
-	// 		':to': ageCompareTo.toISODate(),
-	// 	},
-	// )
-	// console.log('rawAverages', rawAverages)
+	// calculate the age to compare from the givin person's age
+	const ageCompareTo = DateTime.now()
+		.minus({ years: person.age })
+		.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+	//console.log('compare years to', ageCompareTo.toString())
 
+	// run query on all existing people in the same age group
+	// and calculate the averages
 	let ownAgeGroup: AgeGroup | undefined = await db.get(
 		`SELECT
 			round(avg(happyAverage)) as happyAverage, 
@@ -243,12 +270,14 @@ const compareByAge = async (
 	)
 	//console.log('averages', averages)
 
+	// are there any age groups comparable to the person's age group?
 	if (ownAgeGroup && ownAgeGroup.energyAverage) {
 		ownAgeGroup.ageGroup = person.age.toString()
 	} else {
 		ownAgeGroup = undefined
 	}
 
+	// prepare the result set for the compare age opeartion
 	const peopleAgeCompare: PeopleAgeCompare = {
 		person,
 		ownAgeGroup,
@@ -256,14 +285,22 @@ const compareByAge = async (
 		otherAgeGroups: [],
 	}
 
+	// return the data
 	return peopleAgeCompare
 }
 
+/**
+ * Query for the previous survey of a person by id and survey time offset
+ *
+ * @param {number} id
+ * @param {DateString} lastSurveyTime
+ * @returns
+ */
 const getPreviousSruvey = async (id: number, lastSurveyTime: string) => {
+	// get a database connection
 	const db = await openDb()
 
-	//console.log('lastSurveyTime', lastSurveyTime)
-
+	// query the survey log table for the last survey entered by a person
 	const result = await db.get<Survey>(
 		`SELECT * FROM survey
 			WHERE peopleId = :peopleId AND timestamp < :lastSurveyTime ORDER BY timestamp DESC`,
@@ -273,15 +310,19 @@ const getPreviousSruvey = async (id: number, lastSurveyTime: string) => {
 		},
 	)
 
-	//console.log('survey', result)
-
+	// return the data
 	return result
 }
 
+/**
+ *
+ * @param id
+ */
 const compareByAgeGroups = async (id: number) => {
 	// TODO:
 }
 
+// export all the service functions
 export default {
 	getOne,
 	removeOne,

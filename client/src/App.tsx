@@ -13,7 +13,6 @@ import './App.css'
 
 function App() {
 	const [showError, setShowError] = useState('')
-
 	const [fullName, setFullName] = useState('')
 	const [birthday, setBirthday] = useState<Date | null | undefined>()
 	const [happyScale, setHappyScale] = useState('')
@@ -90,7 +89,7 @@ function App() {
 					</Form.Group>
 
 					<Form.Group className="mb-3" controlId="formBirthdayh">
-						<Form.Label>Birthday</Form.Label>
+						<Form.Label>Enter your birthday</Form.Label>
 						<DatePicker
 							required
 							selected={birthday}
