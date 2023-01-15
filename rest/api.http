@@ -8,12 +8,12 @@ POST http://localhost:3001/people/survey
 content-type: application/json
 
 {
-    "fullName": "Ed Sahakian 5",
+    "fullName": "John Smith",
     "birthday": "1971-09-22T00:00:00.000",
-    "happyScale": 3,
-    "energyScale": 1,
-    "hopefulnessScale": 1,
-    "sleepHours": 1
+    "happyScale": 4,
+    "energyScale": 3,
+    "hopefulnessScale": 2,
+    "sleepHours": 8
 }
 ###
 
