@@ -35,6 +35,20 @@ yarn run install:dep
 yarn dev
 ```
 
+```mermaid
+classDiagram
+    survey o-- people
+
+    class people{
+        id number
+    }
+
+    note for survey "peopleId FK (people.id)"
+    class survey{
+        peopleId number
+    }
+```
+
 ### The API
 
 #### Endpoints
