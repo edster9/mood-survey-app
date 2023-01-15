@@ -35,59 +35,45 @@ yarn run install:dep
 yarn dev
 ```
 
-```mermaid
-erDiagram
-    CUSTOMER ||--o{ ORDER : places
-    CUSTOMER {
-        string name
-        string custNumber
-        string sector
-    }
-    ORDER ||--|{ LINE-ITEM : contains
-    ORDER {
-        int orderNumber
-        string deliveryAddress
-    }
-    LINE-ITEM {
-        string productCode
-        int quantity
-        float pricePerUnit
-    }
-```
+### Design considerations
+
+Data is stored to a local sqlite database with two tables. The frontend ReactJS client will post to the ExpressJS backend via a REST API everytime there is a new mood survey request.
+
+#### Database Tables (ERD)
 
 ```mermaid
-classDiagram
-    people <|-- survey
-    class people{
-        id INTEGER PK
-        fullName TEXT
-        birthday DATETIME
-        happyScale INTEGER
-        happyAverage INTEGER
-        happyAggregate INTEGER
-        happyCount INTEGER
-        energyScale INTEGER
-        energyAverage INTEGER
-        energyAggregate INTEGER
-        energyCount INTEGER
-        hopefulnessScale INTEGER
-        hopefulnessAverage INTEGER
-        hopefulnessAggregate INTEGER
-        hopefulnessCount INTEGER
-        sleepHours INTEGER
-        sleepAverage INTEGER
-        sleepAggregate INTEGER
-        sleepCount INTEGER
-        lastSurveyTime DATETIME
+erDiagram
+    PEOPLE ||--|{ SURVEY : contains
+    PEOPLE {
+        INTEGER id PK
+        TEXT fullName
+        DATETIME birthday
+        INTEGER happyScale
+        INTEGER happyAverage
+        INTEGER happyAggregate
+        INTEGER happyCount
+        INTEGER energyScale
+        INTEGER energyAverage
+        INTEGER energyAggregate
+        INTEGER energyCount
+        INTEGER hopefulnessScale
+        INTEGER hopefulnessAverage
+        INTEGER hopefulnessAggregate
+        INTEGER hopefulnessCount
+        INTEGER sleepHours
+        INTEGER sleepAverage
+        INTEGER sleepAggregate
+        INTEGER sleepCount
+        DATETIME lastSurveyTime
     }
-    class survey{
-        id INTEGER PK,
-        peopleId INTEGER
-        happyScale INTEGER
-        energyScale INTEGER
-        hopefulnessScale INTEGER
-        sleepHours INTEGER
-        timestamp DATETIME
+    SURVEY {
+        INTEGER id PK
+        INTEGER peopleId FK
+        INTEGER happyScale
+        INTEGER energyScale
+        INTEGER hopefulnessScale
+        INTEGER sleepHours
+        DATETIME timestamp
     }
 
 ```
