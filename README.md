@@ -36,6 +36,14 @@ yarn dev
 ```
 
 ```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
+
+```mermaid
 classDiagram
     survey o-- people
 
