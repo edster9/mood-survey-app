@@ -70,16 +70,14 @@ graph TD;
 
 ```mermaid
 classDiagram
-    survey o-- people
-
+    people <|-- survey
     class people{
         id number
     }
-
-    note for survey "peopleId FK (people.id)"
     class survey{
         peopleId number
     }
+
 ```
 
 ### The API
