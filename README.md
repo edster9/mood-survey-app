@@ -36,46 +36,58 @@ yarn dev
 ```
 
 ```mermaid
-graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
-```
-
-```mermaid
- classDiagram
-      Animal <|-- Duck
-      Animal <|-- Fish
-      Animal <|-- Zebra
-      Animal : +int age
-      Animal : +String gender
-      Animal: +isMammal()
-      Animal: +mate()
-      class Duck{
-          +String beakColor
-          +swim()
-          +quack()
-       }
-      class Fish{
-          -int sizeInFeet
-          -canEat()
-      }
-      class Zebra{
-          +bool is_wild
-          +run()
-      }
-
+erDiagram
+    CUSTOMER ||--o{ ORDER : places
+    CUSTOMER {
+        string name
+        string custNumber
+        string sector
+    }
+    ORDER ||--|{ LINE-ITEM : contains
+    ORDER {
+        int orderNumber
+        string deliveryAddress
+    }
+    LINE-ITEM {
+        string productCode
+        int quantity
+        float pricePerUnit
+    }
 ```
 
 ```mermaid
 classDiagram
     people <|-- survey
     class people{
-        id number
+        id INTEGER PK
+        fullName TEXT
+        birthday DATETIME
+        happyScale INTEGER
+        happyAverage INTEGER
+        happyAggregate INTEGER
+        happyCount INTEGER
+        energyScale INTEGER
+        energyAverage INTEGER
+        energyAggregate INTEGER
+        energyCount INTEGER
+        hopefulnessScale INTEGER
+        hopefulnessAverage INTEGER
+        hopefulnessAggregate INTEGER
+        hopefulnessCount INTEGER
+        sleepHours INTEGER
+        sleepAverage INTEGER
+        sleepAggregate INTEGER
+        sleepCount INTEGER
+        lastSurveyTime DATETIME
     }
     class survey{
-        peopleId number
+        id INTEGER PK,
+        peopleId INTEGER
+        happyScale INTEGER
+        energyScale INTEGER
+        hopefulnessScale INTEGER
+        sleepHours INTEGER
+        timestamp DATETIME
     }
 
 ```
