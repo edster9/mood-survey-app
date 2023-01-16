@@ -10,11 +10,11 @@ The survey result will be compared to the previous enteries by the user as well 
 
 This project is a javascript application using the following tech stacks.
 
-- **TypeScript:**
-- **ExpressJS:**
-- **Sqlite:**
-- **ReactJS:**
-- **Bootstrap UI:**
+- **TypeScript**
+- **ExpressJS**
+- **Sqlite**
+- **ReactJS**
+- **Bootstrap UI**
 
 ## Installation
 
@@ -51,6 +51,10 @@ yarn start
 ## Design considerations
 
 Data is stored to a local sqlite database with two tables. The frontend ReactJS client will post to the ExpressJS backend via a REST API everytime there is a new mood survey request.
+
+### Unique users consideration
+
+Each new mood survey is keyed based on the (full name / birthday) columns. Two entries with the same name but different birthdays will be considered two unique users.
 
 ### Database Tables (ERD)
 
@@ -90,6 +94,12 @@ erDiagram
     }
 
 ```
+
+### Time complexity
+
+Inserting a new survey row will be a **Constant time: O(1)** time complexity. The People table allows for a running averages aggregate counter. The average calcuation does not require a full scan of all previous survey entries.
+
+Comparing the the user's age group to all other users in the same age group will be a **Linear time: O(n)** time complexity.
 
 ### The API
 
