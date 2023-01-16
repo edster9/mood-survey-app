@@ -237,3 +237,30 @@ GET /people/1/compare/age
 	"ageGroup": "51"
 }
 ```
+
+---
+
+##### **GET /people/:id/compare/age-groups**
+
+Get the raw age groups comparisson of a person by the person id
+
+##### **Age Groups**
+
+- 0-10
+- 11-15
+- 16-21
+- 22-30
+- 31-40
+- 41-50
+- 51-70
+- 71-infinity
+
+### Request:
+
+```http
+GET /people/1/compare/age-groups
+```
+
+### Response:
+
+**WORK IN PROGRESS**
