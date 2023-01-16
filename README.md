@@ -52,6 +52,14 @@ yarn start
 
 Data is stored to a local sqlite database with two tables. The frontend ReactJS client will post to the ExpressJS backend via a REST API everytime there is a new mood survey request.
 
+### Data validation
+
+Both client and server side data validation is used when collecting and submiting a new mood survey.
+
+Validation on the frontend is done using native html form validation and bootstrap UI.
+
+Validation on the backend API is done using class-validator DTO design that defines all the data limits (min/max) and (date) when the survey API is triggered.
+
 ### Unique users consideration
 
 Each new mood survey is keyed based on the (full name / birthday) columns. Two entries with the same name but different birthdays will be considered two unique users.
