@@ -67,7 +67,7 @@ const peopleSurvey = async (
 		await validate(new PeopleSurveyDto(req.body))
 
 		// insert new survey and return result
-		return res.json(await PeopleService.peopleSurvey(req.body))
+		return res.status(201).json(await PeopleService.peopleSurvey(req.body))
 	} catch (e: any) {
 		return res.status(400).send(e.message)
 	}
@@ -91,6 +91,8 @@ const compareByAge = async (req: Request<EntityFindById>, res: Response) => {
 		// resturn compare result if person was found
 		if (compare) {
 			return res.json(compare)
+		} else if (compare === null) {
+			return res.sendStatus(204)
 		} else {
 			return res.sendStatus(404)
 		}

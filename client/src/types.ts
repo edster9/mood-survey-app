@@ -63,7 +63,7 @@ export interface Survey {
  */
 export interface PeopleAgeCompare {
 	person: People
-	previousSurvey: Survey | undefined
-	ownAgeGroup: AgeGroup | undefined
-	otherAgeGroups: AgeGroup[]
+	previousSurvey?: Survey
+	ownAgeGroup?: AgeGroup
+	otherAgeGroups?: AgeGroup[]
 }

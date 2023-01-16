@@ -166,13 +166,13 @@ content-type: application/json
 
 Response:
 
-```json
+````json
 {
 	"person": {
 		"id": 1,
 		"fullName": "John Smith",
-		"birthday": "1971-09-22T00:00:00.000",
-		"lastSurveyTime": "2023-01-15T11:10:57.797-08:00",
+		"birthday": "1971-09-12T00:00:00.000",
+		"lastSurveyTime": "2023-01-16T09:14:26.615-08:00",
 		"happyScale": 4,
 		"happyAverage": 4,
 		"energyScale": 3,
@@ -184,14 +184,35 @@ Response:
 		"age": 51
 	},
 	"previousSurvey": {
-		"id": 1,
+		"id": 2,
 		"peopleId": 1,
 		"happyScale": 4,
 		"energyScale": 3,
 		"hopefulnessScale": 2,
 		"sleepHours": 8,
-		"timestamp": "2023-01-15T11:08:50.915-08:00"
+		"timestamp": "2023-01-16T09:13:55.281-08:00"
 	},
-	"otherAgeGroups": []
+	"ownAgeGroup": {
+		"happyAverage": 4,
+		"energyAverage": 3,
+		"hopefulnessAverage": 2,
+		"sleepAverage": 8,
+		"ageGroup": "51"
+	}
+}
+
+```http
+GET /people/1/compare/age
+````
+
+Response:
+
+```json
+{
+	"happyAverage": 4,
+	"energyAverage": 3,
+	"hopefulnessAverage": 2,
+	"sleepAverage": 8,
+	"ageGroup": "51"
 }
 ```

@@ -3,13 +3,17 @@
 GET http://localhost:3001/people/1
 ###
 
+# Delete a person and all survey logs
+DELETE http://localhost:3001/people/3
+###
+
 # Add a new survey
 POST http://localhost:3001/people/survey
 content-type: application/json
 
 {
     "fullName": "John Smith",
-    "birthday": "1971-09-22T00:00:00.000",
+    "birthday": "1971-09-12T00:00:00.000",
     "happyScale": 4,
     "energyScale": 3,
     "hopefulnessScale": 2,
@@ -17,17 +21,8 @@ content-type: application/json
 }
 ###
 
-# Add a new survey (with error)
-POST http://localhost:3001/people/survey
-content-type: application/json
-###
-
-# Delete a person and all survey logs
-DELETE http://localhost:3001/people/3
-###
-
 # Compare a person to others of same age
-GET http://localhost:3001/people/2/compare/age
+GET http://localhost:3001/people/1/compare/age
 
 ###
 

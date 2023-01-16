@@ -50,7 +50,7 @@ const removeOne = async (id: number) => {
 	const db = await openDb()
 
 	// delete all the survey logs for this person
-	await db.run('DELETE FROM servey WHERE peopleId = :id', {
+	await db.run('DELETE FROM survey WHERE peopleId = :id', {
 		':id': id,
 	})
 
@@ -66,16 +66,18 @@ const removeOne = async (id: number) => {
  * @param {PeopleSurveyDto} survey
  * @returns PeopleAgeCompare
  */
-const peopleSurvey = async (survey: PeopleSurveyDto) => {
+const peopleSurvey = async (
+	survey: PeopleSurveyDto,
+): Promise<PeopleAgeCompare> => {
 	// get a database connection
 	const db = await openDb()
 
-	let peopleId = 0
+	let personId = 0
 	// mark the current time
 	const surveyTime = DateTime.now().toISO()
 
 	// does the current person already exists?
-	const result = await db.get<People>(
+	const person = await db.get<People>(
 		'SELECT * FROM people WHERE fullName = :fullName AND birthday = :birthday',
 		{
 			':fullName': survey.fullName,
@@ -83,7 +85,7 @@ const peopleSurvey = async (survey: PeopleSurveyDto) => {
 		},
 	)
 
-	if (!result) {
+	if (!person) {
 		// If the person does not exists then create a new row in the person table
 		const insertPeopleResult = await db.run(
 			`INSERT INTO people
@@ -125,32 +127,32 @@ const peopleSurvey = async (survey: PeopleSurveyDto) => {
 
 		// get the new person id
 		if (insertPeopleResult.lastID) {
-			peopleId = insertPeopleResult.lastID
+			personId = insertPeopleResult.lastID
 		}
 	} else {
 		// if the person already exists then update the table with latest survey data
-		result.happyCount++
-		result.happyAggregate += survey.happyScale
-		result.happyAverage = Math.round(result.happyAggregate / result.happyCount)
+		person.happyCount++
+		person.happyAggregate += survey.happyScale
+		person.happyAverage = Math.round(person.happyAggregate / person.happyCount)
 
-		result.energyCount++
-		result.energyAggregate += survey.energyScale
-		result.energyAgerage = Math.round(
-			result.energyAggregate / result.energyCount,
+		person.energyCount++
+		person.energyAggregate += survey.energyScale
+		person.energyAgerage = Math.round(
+			person.energyAggregate / person.energyCount,
 		)
 
-		result.hopefulnessCount++
-		result.hopefulnessAggregate += survey.hopefulnessScale
-		result.hopefulnessAverage = Math.round(
-			result.hopefulnessAggregate / result.hopefulnessCount,
+		person.hopefulnessCount++
+		person.hopefulnessAggregate += survey.hopefulnessScale
+		person.hopefulnessAverage = Math.round(
+			person.hopefulnessAggregate / person.hopefulnessCount,
 		)
 
-		result.sleepCount++
-		result.sleepAggregate += survey.sleepHours
-		result.sleepAverage = Math.round(result.sleepAggregate / result.sleepCount)
+		person.sleepCount++
+		person.sleepAggregate += survey.sleepHours
+		person.sleepAverage = Math.round(person.sleepAggregate / person.sleepCount)
 
 		// get the current person id
-		peopleId = result.id
+		personId = person.id
 
 		// update the database with new survey data
 		await db.run(
@@ -175,23 +177,23 @@ const peopleSurvey = async (survey: PeopleSurveyDto) => {
 					WHERE id = :id	
 				`,
 			{
-				':id': peopleId,
+				':id': personId,
 				':happyScale': survey.happyScale,
-				':happyAverage': result.happyAverage,
-				':happyAggregate': result.happyAggregate,
-				':happyCount': result.happyCount,
+				':happyAverage': person.happyAverage,
+				':happyAggregate': person.happyAggregate,
+				':happyCount': person.happyCount,
 				':energyScale': survey.energyScale,
-				':energyAverage': result.energyAgerage,
-				':energyAggregate': result.energyAggregate,
-				':energyCount': result.energyCount,
+				':energyAverage': person.energyAgerage,
+				':energyAggregate': person.energyAggregate,
+				':energyCount': person.energyCount,
 				':hopefulnessScale': survey.hopefulnessScale,
-				':hopefulnessAverage': result.hopefulnessAverage,
-				':hopefulnessAggregate': result.hopefulnessAggregate,
-				':hopefulnessCount': result.hopefulnessCount,
+				':hopefulnessAverage': person.hopefulnessAverage,
+				':hopefulnessAggregate': person.hopefulnessAggregate,
+				':hopefulnessCount': person.hopefulnessCount,
 				':sleepHours': survey.sleepHours,
-				':sleepAverage': result.sleepAverage,
-				':sleepAggregate': result.sleepAggregate,
-				':sleepCount': result.sleepCount,
+				':sleepAverage': person.sleepAverage,
+				':sleepAggregate': person.sleepAggregate,
+				':sleepCount': person.sleepCount,
 				':lastSurveyTime': surveyTime,
 			},
 		)
@@ -208,7 +210,7 @@ const peopleSurvey = async (survey: PeopleSurveyDto) => {
 				:peopleId, :happyScale, :energyScale, :hopefulnessScale, :sleepHours, :timestamp
 			)`,
 		{
-			':peopleId': peopleId,
+			':peopleId': personId,
 			':happyScale': survey.happyScale,
 			':energyScale': survey.energyScale,
 			':hopefulnessScale': survey.hopefulnessScale,
@@ -217,8 +219,26 @@ const peopleSurvey = async (survey: PeopleSurveyDto) => {
 		},
 	)
 
-	// compare the age groups and retrun the data
-	return compareByAge(peopleId)
+	const newPerson: People = (await getOne(personId)) as People
+
+	const result: PeopleAgeCompare = {
+		person: newPerson,
+	}
+
+	const previousSurvey = await getPreviousSruvey(
+		personId,
+		newPerson.lastSurveyTime,
+	)
+	if (previousSurvey) {
+		result.previousSurvey = previousSurvey
+	}
+
+	const ownAgeGroup = await compareByAge(personId, newPerson.age)
+	if (ownAgeGroup) {
+		result.ownAgeGroup = ownAgeGroup
+	}
+
+	return result
 }
 
 /**
@@ -229,32 +249,37 @@ const peopleSurvey = async (survey: PeopleSurveyDto) => {
  */
 const compareByAge = async (
 	id: number,
-): Promise<PeopleAgeCompare | undefined> => {
+	age?: number,
+): Promise<AgeGroup | null | undefined> => {
 	// get a database connection
 	const db = await openDb()
 
-	// find the existing person
-	const person = await getOne(id)
+	if (!age) {
+		// find the existing person
+		const person = await getOne(id)
 
-	if (!person) {
-		return
+		if (!person) {
+			return
+		}
+
+		age = person.age
 	}
 
 	// calculate the age from compare from the givin person's age
 	const ageCompareFrom = DateTime.now()
-		.minus({ years: person.age + 1 })
+		.minus({ years: age + 1 })
 		.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
 	//console.log('compare years from', ageCompareFrom.toString())
 
 	// calculate the age to compare from the givin person's age
 	const ageCompareTo = DateTime.now()
-		.minus({ years: person.age })
+		.minus({ years: age })
 		.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
 	//console.log('compare years to', ageCompareTo.toString())
 
 	// run query on all existing people in the same age group
 	// and calculate the averages
-	let ownAgeGroup = await db.get<AgeGroup>(
+	let ownAgeGroup = await db.get<AgeGroup | null>(
 		`SELECT
 			round(avg(happyAverage)) as happyAverage, 
 			round(avg(energyAverage)) as energyAverage,
@@ -272,21 +297,12 @@ const compareByAge = async (
 
 	// are there any age groups comparable to the person's age group?
 	if (ownAgeGroup && ownAgeGroup.energyAverage) {
-		ownAgeGroup.ageGroup = person.age.toString()
+		ownAgeGroup.ageGroup = age.toString()
 	} else {
-		ownAgeGroup = undefined
+		ownAgeGroup = null
 	}
 
-	// prepare the result set for the compare age opeartion
-	const peopleAgeCompare: PeopleAgeCompare = {
-		person,
-		ownAgeGroup,
-		previousSurvey: await getPreviousSruvey(id, person.lastSurveyTime),
-		otherAgeGroups: [],
-	}
-
-	// return the data
-	return peopleAgeCompare
+	return ownAgeGroup
 }
 
 /**

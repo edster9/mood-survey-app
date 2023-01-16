@@ -91,8 +91,8 @@ const SurveyResultTabs = (props: SurveyResultProps) => {
 							<thead>
 								<tr>
 									<th>Category</th>
-									<th>Last Surveyed</th>
-									<th>Average</th>
+									<th>Last Survey</th>
+									<th>Age Group Average</th>
 								</tr>
 							</thead>
 							<tbody>
