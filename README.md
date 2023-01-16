@@ -122,13 +122,15 @@ Comparing the the user's age group to all other users in the same age group will
 
 ##### **GET /people/:id**
 
-Request:
+Get one person by id
+
+#### Request:
 
 ```http
 GET http://localhost:3001/people/1
 ```
 
-Response:
+#### Response:
 
 ```json
 {
@@ -152,7 +154,9 @@ Response:
 
 ##### **POST /people/survey**
 
-Request:
+Submit a new mood survey. A new person will be created if the (name/birthday) does not match an existing person in the database.
+
+#### Request:
 
 ```http
 POST /people/survey
@@ -168,7 +172,11 @@ content-type: application/json
 }
 ```
 
-Response:
+#### Response:
+
+- The **person** field will always be returned. Either an existing person from a previous survey or a newly created person.
+- The **previousSurvey** field will only be populated if the person already submited a previous survey.
+- The **ownAgeGroup** field will only be populated if others in the same age group exists in the database so a comparisson can be done.
 
 ```json
 {
@@ -210,13 +218,15 @@ Response:
 
 ##### **GET /people/:id/compare/age**
 
-Request:
+Get the raw age group comparisson of a person by the person id
+
+### Request:
 
 ```http
 GET /people/1/compare/age
 ```
 
-Response:
+### Response:
 
 ```json
 {
