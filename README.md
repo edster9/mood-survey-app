@@ -200,6 +200,7 @@ Response:
 		"ageGroup": "51"
 	}
 }
+```
 
 ```http
 GET /people/1/compare/age
