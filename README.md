@@ -42,7 +42,7 @@ cd mood-survey-app
 yarn
 yarn server:dev
 
-# run backend
+# run frontend
 cd mood-survey-app/client
 yarn
 yarn start
