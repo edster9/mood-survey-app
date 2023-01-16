@@ -100,7 +100,7 @@ const compareByAge = async (req: Request<EntityFindById>, res: Response) => {
 }
 
 /**
- * TODO: work in progress
+ * Compare a person to others using many age groups
  *
  * @param req
  * @param res
@@ -111,9 +111,18 @@ const compareByAgeGroups = async (
 	res: Response,
 ) => {
 	try {
-		// TODO:
+		// validate search params
+		await validate(new EntityFindById(req.params))
 
-		res.sendStatus(501)
+		// compare the person to others age groups
+		const compare = await PeopleService.compareByAgeGroups(req.params.id)
+
+		// resturn compare result if person was found
+		if (compare) {
+			return res.json(compare)
+		} else {
+			return res.sendStatus(404)
+		}
 	} catch (e: any) {
 		return res.status(400).send(e.message)
 	}

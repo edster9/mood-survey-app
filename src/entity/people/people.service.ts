@@ -19,7 +19,7 @@ const getOne = async (id: number) => {
 	const db = await openDb()
 
 	// query the people table and search by id
-	const person: People | undefined = await db.get(
+	const person = await db.get<People>(
 		`SELECT 
 			id, fullName, birthday, lastSurveyTime,
 			happyScale, happyAverage, 
@@ -75,7 +75,7 @@ const peopleSurvey = async (survey: PeopleSurveyDto) => {
 	const surveyTime = DateTime.now().toISO()
 
 	// does the current person already exists?
-	const result: People | undefined = await db.get(
+	const result = await db.get<People>(
 		'SELECT * FROM people WHERE fullName = :fullName AND birthday = :birthday',
 		{
 			':fullName': survey.fullName,
@@ -254,7 +254,7 @@ const compareByAge = async (
 
 	// run query on all existing people in the same age group
 	// and calculate the averages
-	let ownAgeGroup: AgeGroup | undefined = await db.get(
+	let ownAgeGroup = await db.get<AgeGroup>(
 		`SELECT
 			round(avg(happyAverage)) as happyAverage, 
 			round(avg(energyAverage)) as energyAverage,
@@ -315,11 +315,17 @@ const getPreviousSruvey = async (id: number, lastSurveyTime: string) => {
 }
 
 /**
+ * Compare a person to others using many age groups
  *
- * @param id
+ * @param {number} id
  */
 const compareByAgeGroups = async (id: number) => {
-	// TODO:
+	// get a database connection
+	const db = await openDb()
+
+	// TODO: work in progress
+
+	return {}
 }
 
 // export all the service functions
