@@ -118,6 +118,8 @@ Comparing the the user's age group to all other users in the same age group will
 - [GET] /people/:id/compare/age
 - [GET] /people/:id/compare/age-groups
 
+---
+
 ##### **GET /people/:id**
 
 Request:
@@ -145,6 +147,8 @@ Response:
 	"age": 51
 }
 ```
+
+---
 
 ##### **POST /people/survey**
 
@@ -201,6 +205,8 @@ Response:
 	}
 }
 ```
+
+---
 
 ##### **GET /people/:id/compare/age**
 
