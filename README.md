@@ -166,7 +166,7 @@ content-type: application/json
 
 Response:
 
-````json
+```json
 {
 	"person": {
 		"id": 1,
@@ -202,9 +202,13 @@ Response:
 }
 ```
 
+##### **GET /people/:id/compare/age**
+
+Request:
+
 ```http
 GET /people/1/compare/age
-````
+```
 
 Response:
 
