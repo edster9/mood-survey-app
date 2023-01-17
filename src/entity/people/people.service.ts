@@ -293,10 +293,11 @@ const compareByAge = async (
 			':to': ageCompareTo.toISODate(),
 		},
 	)
-	//console.log('averages', averages)
+	//console.log('averages', ownAgeGroup)
 
 	// are there any age groups comparable to the person's age group?
 	if (ownAgeGroup && ownAgeGroup.energyAverage) {
+		// define the age group code for this age group
 		ownAgeGroup.ageGroup = age.toString()
 	} else {
 		ownAgeGroup = null
@@ -339,9 +340,109 @@ const compareByAgeGroups = async (id: number) => {
 	// get a database connection
 	const db = await openDb()
 
-	// TODO: work in progress
+	// find the existing person
+	const person = await getOne(id)
 
-	return {}
+	if (!person) {
+		return
+	}
+
+	// age compare groups
+	const ageCompares: { from: number; to: number }[] = [
+		{
+			from: 10,
+			to: 0,
+		},
+		{
+			from: 11,
+			to: 15,
+		},
+		{
+			from: 21,
+			to: 16,
+		},
+		{
+			from: 30,
+			to: 22,
+		},
+		{
+			from: 40,
+			to: 31,
+		},
+		{
+			from: 50,
+			to: 41,
+		},
+		{
+			from: 70,
+			to: 51,
+		},
+		{
+			from: -1, // from infinity
+			to: 71,
+		},
+	]
+
+	// return result set
+	const result = Array<AgeGroup>()
+
+	for (let ageCompare of ageCompares) {
+		//console.log('ageCompare', ageCompare)
+
+		// Is the from date starting at Infinity?
+		const fromInfinity = ageCompare.from >= 0 ? false : true
+
+		// calculate the age from compare from the age group array
+		const ageCompareFrom = DateTime.now()
+			.minus({ years: ageCompare.from })
+			.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+
+		// calculate the age from compare to the age group array
+		const ageCompareTo = DateTime.now()
+			.minus({ years: ageCompare.to })
+			.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+
+		const sqlBindParams: any = {
+			':id': id,
+			':to': ageCompareTo.toISODate(),
+		}
+
+		// add the :from binding for the sql query only if not searching from infinity
+		if (!fromInfinity) {
+			sqlBindParams[':from'] = ageCompareFrom.toISODate()
+		}
+
+		// run query on all existing people in the same age group
+		// and calculate the averages
+		let ownAgeGroup = await db.get<AgeGroup>(
+			`SELECT
+				round(avg(happyAverage)) as happyAverage, 
+				round(avg(energyAverage)) as energyAverage,
+				round(avg(hopefulnessAverage)) as hopefulnessAverage,
+				round(avg(sleepAverage)) as sleepAverage
+				FROM people WHERE ${!fromInfinity ? 'birthday > :from AND' : ''} birthday <= :to
+				AND id != :id`,
+			sqlBindParams,
+		)
+		// console.log(
+		// 	'averages',
+		// 	ownAgeGroup,
+		// 	ageCompareTo.toISO(),
+		// 	fromInfinity ? 'Infinity' : ageCompareFrom.toISO(),
+		// )
+
+		if (ownAgeGroup?.happyAverage) {
+			// define the age group code for this age group
+			ownAgeGroup.ageGroup = `${ageCompare.to}-${
+				fromInfinity ? 'Infinity' : ageCompare.from
+			}`
+
+			// add this age group to the result set
+			result.push(ownAgeGroup)
+		}
+	}
+
+	return result
 }
 
 // export all the service functions

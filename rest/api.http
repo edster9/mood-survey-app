@@ -27,6 +27,6 @@ GET http://localhost:3001/people/1/compare/age
 ###
 
 # Compare a person to others using many age groups
-# Age groups: 0-10, 11-15, 16-21, 22-30, 31-40, 41-50, 55-70, 71-infinity
+# Age groups: 0-10, 11-15, 16-21, 22-30, 31-40, 41-50, 51-70, 71-infinity
 # Missing group 51-54 ???
 GET http://localhost:3001/people/1/compare/age-groups
