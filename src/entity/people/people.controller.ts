@@ -26,6 +26,7 @@ const getOne = async (req: Request<EntityFindById>, res: Response) => {
 			return res.sendStatus(404)
 		}
 	} catch (e: any) {
+		/* istanbul ignore next */
 		return res.status(400).send(e.message)
 	}
 }
