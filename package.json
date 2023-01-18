@@ -22,6 +22,7 @@
 		"server:dev": "ts-node-dev --respawn --transpile-only src/server.ts",
 		"client:dev": "cd client && yarn start",
 		"dev": "concurrently --kill-others \"yarn run server:dev\" \"yarn run client:dev\"",
+		"dev:test": "NODE_ENV=test concurrently --kill-others \"yarn run server:dev\" \"yarn run client:dev\"",
 		"test": "rm -f test.db.sqlite && NODE_ENV=test jest --coverage"
 	},
 	"dependencies": {
