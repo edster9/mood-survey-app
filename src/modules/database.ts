@@ -8,7 +8,9 @@ import { open, Database } from 'sqlite'
  */
 export default async function openDb() {
 	return open({
-		filename: 'db.sqlite',
+		filename: process.env.NODE_ENV
+			? `${process.env.NODE_ENV}.db.sqlite`
+			: 'db.sqlite',
 		driver: sqlite3.cached.Database,
 	})
 }
