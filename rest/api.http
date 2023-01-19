@@ -4,7 +4,7 @@ GET http://localhost:3001/people/1
 ###
 
 # Delete a person and all survey logs
-DELETE http://localhost:3001/people/3
+DELETE http://localhost:3001/people/4
 ###
 
 # Add a new survey
@@ -22,11 +22,11 @@ content-type: application/json
 ###
 
 # Compare a person to others of same age
-GET http://localhost:3001/people/1/compare/age
+GET http://localhost:3001/people/2/compare/age
 
 ###
 
 # Compare a person to others using many age groups
 # Age groups: 0-10, 11-15, 16-21, 22-30, 31-40, 41-50, 51-70, 71-infinity
 # Missing group 51-54 ???
-GET http://localhost:3001/people/1/compare/age-groups
+GET http://localhost:3001/people/2/compare/age-groups

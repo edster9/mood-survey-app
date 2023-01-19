@@ -1,5 +1,5 @@
 import sqlite3 from 'sqlite3'
-import { open, Database } from 'sqlite'
+import { open, Database, ISqlite } from 'sqlite'
 
 /**
  * Createa cached connection to sqlite database
@@ -7,10 +7,14 @@ import { open, Database } from 'sqlite'
  * @returns Database
  */
 export default async function openDb() {
-	return open({
-		filename: process.env.NODE_ENV
-			? `${process.env.NODE_ENV}.db.sqlite`
-			: 'db.sqlite',
+	const dbConfig: ISqlite.Config = {
+		filename: 'db.sqlite',
 		driver: sqlite3.cached.Database,
-	})
+	}
+
+	if (process.env.NODE_ENV) {
+		dbConfig.filename = `${process.env.NODE_ENV}.db.sqlite`
+	}
+
+	return open(dbConfig)
 }

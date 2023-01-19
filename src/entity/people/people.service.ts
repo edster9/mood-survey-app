@@ -269,13 +269,13 @@ const compareByAge = async (
 	const ageCompareFrom = DateTime.now()
 		.minus({ years: age + 1 })
 		.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-	//console.log('compare years from', ageCompareFrom.toString())
+	//console.log('compare years from', ageCompareFrom.toISO())
 
 	// calculate the age to compare from the givin person's age
 	const ageCompareTo = DateTime.now()
 		.minus({ years: age })
 		.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-	//console.log('compare years to', ageCompareTo.toString())
+	//console.log('compare years to', ageCompareTo.toISO())
 
 	// run query on all existing people in the same age group
 	// and calculate the averages
@@ -285,12 +285,12 @@ const compareByAge = async (
 			round(avg(energyAverage)) as energyAverage,
 			round(avg(hopefulnessAverage)) as hopefulnessAverage,
 			round(avg(sleepAverage)) as sleepAverage
-			FROM people WHERE birthday > :from AND birthday <= :to
+			FROM people WHERE birthday >= :from AND birthday <= :to
 			AND id != :id`,
 		{
 			':id': id,
-			':from': ageCompareFrom.toISODate(),
-			':to': ageCompareTo.toISODate(),
+			':from': ageCompareFrom.toISO(),
+			':to': ageCompareTo.toISO(),
 		},
 	)
 	//console.log('averages', ownAgeGroup)
@@ -404,12 +404,12 @@ const compareByAgeGroups = async (id: number) => {
 
 		const sqlBindParams: any = {
 			':id': id,
-			':to': ageCompareTo.toISODate(),
+			':to': ageCompareTo.toISO(),
 		}
 
 		// add the :from binding for the sql query only if not searching from infinity
 		if (!fromInfinity) {
-			sqlBindParams[':from'] = ageCompareFrom.toISODate()
+			sqlBindParams[':from'] = ageCompareFrom.toISO()
 		}
 
 		// run query on all existing people in the same age group
@@ -420,7 +420,9 @@ const compareByAgeGroups = async (id: number) => {
 				round(avg(energyAverage)) as energyAverage,
 				round(avg(hopefulnessAverage)) as hopefulnessAverage,
 				round(avg(sleepAverage)) as sleepAverage
-				FROM people WHERE ${!fromInfinity ? 'birthday > :from AND' : ''} birthday <= :to
+				FROM people WHERE ${
+					!fromInfinity ? 'birthday >= :from AND' : ''
+				} birthday <= :to
 				AND id != :id`,
 			sqlBindParams,
 		)
@@ -431,7 +433,7 @@ const compareByAgeGroups = async (id: number) => {
 		// 	fromInfinity ? 'Infinity' : ageCompareFrom.toISO(),
 		// )
 
-		if (ownAgeGroup?.happyAverage) {
+		if (ownAgeGroup && ownAgeGroup.happyAverage) {
 			// define the age group code for this age group
 			ownAgeGroup.ageGroup = `${ageCompare.to}-${
 				fromInfinity ? 'Infinity' : ageCompare.from
