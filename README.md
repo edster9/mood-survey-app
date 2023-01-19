@@ -48,6 +48,14 @@ yarn
 yarn start
 ```
 
+### Unit Testing
+
+You can run a full unit test with 100% code coverage report of the API code with the following command
+
+```bash
+yarn test
+```
+
 ## Design considerations
 
 Data is stored to a local sqlite database with two tables. The frontend ReactJS client will post to the ExpressJS backend via a REST API everytime there is a new mood survey request.
