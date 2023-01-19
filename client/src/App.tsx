@@ -25,6 +25,8 @@ function App() {
 	const [energyScale, setEnergyScale] = useState('')
 	const [hopefulnessScale, setHopefulnessScale] = useState('')
 	const [sleepHours, setSleepHours] = useState('')
+	const [compareToAll, setCompareToAll] = useState(false)
+
 	// survey result
 	const [surveyResult, setSurveyResult] = useState<
 		PeopleAgeCompare | undefined
@@ -43,11 +45,12 @@ function App() {
 		// prepare the form submit data
 		const surveyData = {
 			fullName,
-			birthday: birthday?.toISOString(),
+			birthday: (birthday as Date).toISOString(),
 			happyScale: parseInt(happyScale),
 			energyScale: parseInt(energyScale),
 			hopefulnessScale: parseInt(hopefulnessScale),
 			sleepHours: parseInt(sleepHours),
+			compareToAll,
 		}
 
 		// make the form submit API call
@@ -62,6 +65,7 @@ function App() {
 				setEnergyScale('')
 				setHopefulnessScale('')
 				setSleepHours('')
+				setCompareToAll(false)
 
 				// Switch to result screen
 				setSurveyResult(result.data)
@@ -211,9 +215,14 @@ function App() {
 						<Form.Text className="text-muted"></Form.Text>
 					</Form.Group>
 
-					{/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
-						<Form.Check type="checkbox" label="Compare to all age groups" />
-					</Form.Group> */}
+					<Form.Group className="mb-3" controlId="formBasicCheckbox">
+						<Form.Check
+							type="checkbox"
+							label="Compare to all age groups"
+							checked={compareToAll}
+							onChange={(e) => setCompareToAll(e.target.checked)}
+						/>
+					</Form.Group>
 
 					<Button variant="primary" type="submit">
 						Submit

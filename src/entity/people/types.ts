@@ -1,4 +1,11 @@
-import { IsString, IsDateString, IsNumber, Min, Max } from 'class-validator'
+import {
+	IsString,
+	IsDateString,
+	IsNumber,
+	Min,
+	Max,
+	IsBoolean,
+} from 'class-validator'
 
 /**
  * People definition
@@ -84,6 +91,7 @@ export class PeopleSurveyDto {
 		this.energyScale = data.energyScale
 		this.hopefulnessScale = data.hopefulnessScale
 		this.sleepHours = data.sleepHours
+		this.compareToAll = data.compareToAll
 	}
 
 	@IsString()
@@ -111,4 +119,7 @@ export class PeopleSurveyDto {
 	@Min(0)
 	@Max(12)
 	sleepHours: number
+
+	@IsBoolean()
+	compareToAll: boolean
 }

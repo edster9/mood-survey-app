@@ -238,6 +238,14 @@ const peopleSurvey = async (
 		result.ownAgeGroup = ownAgeGroup
 	}
 
+	if (survey.compareToAll) {
+		const otherAgeGroups = await compareByAgeGroups(personId)
+
+		if (otherAgeGroups) {
+			result.otherAgeGroups = otherAgeGroups
+		}
+	}
+
 	return result
 }
 

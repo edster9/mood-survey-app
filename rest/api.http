@@ -17,7 +17,8 @@ content-type: application/json
     "happyScale": 4,
     "energyScale": 3,
     "hopefulnessScale": 2,
-    "sleepHours": 8
+    "sleepHours": 8,
+    "compareToAll": true
 }
 ###
 
@@ -29,4 +30,4 @@ GET http://localhost:3001/people/2/compare/age
 # Compare a person to others using many age groups
 # Age groups: 0-10, 11-15, 16-21, 22-30, 31-40, 41-50, 51-70, 71-infinity
 # Missing group 51-54 ???
-GET http://localhost:3001/people/2/compare/age-groups
+GET http://localhost:3001/people/3/compare/age-groups

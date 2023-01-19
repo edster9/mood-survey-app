@@ -28,6 +28,7 @@ describe('POST /people/survey', () => {
 			energyScale: 1,
 			hopefulnessScale: 1,
 			sleepHours: 1,
+			compareToAll: false,
 		})
 
 		expect(response.statusCode).toBe(201)
@@ -65,6 +66,7 @@ describe('POST /people/survey', () => {
 			energyScale: 1,
 			hopefulnessScale: 1,
 			sleepHours: 1,
+			compareToAll: false,
 		})
 
 		expect(response.statusCode).toBe(201)
@@ -102,6 +104,7 @@ describe('POST /people/survey', () => {
 			energyScale: 1,
 			hopefulnessScale: 1,
 			sleepHours: 1,
+			compareToAll: false,
 		})
 
 		expect(response.statusCode).toBe(201)
@@ -146,6 +149,7 @@ describe('POST /people/survey', () => {
 			energyScale: 1,
 			hopefulnessScale: 1,
 			sleepHours: 1,
+			compareToAll: false,
 		})
 
 		expect(response.statusCode).toBe(201)
@@ -199,6 +203,7 @@ describe('POST /people/survey', () => {
 			energyScale: 1,
 			hopefulnessScale: 1,
 			sleepHours: 1,
+			compareToAll: false,
 		})
 
 		expect(response.statusCode).toBe(201)
@@ -223,7 +228,7 @@ describe('POST /people/survey', () => {
 		})
 	})
 
-	test('create a mood survey for a 90 year old (Bob Dole)', async () => {
+	test('create a mood survey for a 90 year old (Bob Dole) with compare to all age groups', async () => {
 		// calculate the birthday for 90 years old
 		const personAge = DateTime.now()
 			.minus({ years: 90 })
@@ -236,6 +241,7 @@ describe('POST /people/survey', () => {
 			energyScale: 1,
 			hopefulnessScale: 1,
 			sleepHours: 1,
+			compareToAll: true,
 		})
 
 		expect(response.statusCode).toBe(201)
@@ -257,6 +263,22 @@ describe('POST /people/survey', () => {
 				sleepAverage: 1,
 				age: 90,
 			},
+			otherAgeGroups: [
+				{
+					ageGroup: '22-30',
+					energyAverage: 1,
+					happyAverage: 1,
+					hopefulnessAverage: 1,
+					sleepAverage: 1,
+				},
+				{
+					ageGroup: '31-40',
+					energyAverage: 1,
+					happyAverage: 1,
+					hopefulnessAverage: 1,
+					sleepAverage: 1,
+				},
+			],
 		})
 	})
 })
