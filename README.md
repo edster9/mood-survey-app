@@ -263,4 +263,21 @@ GET /people/1/compare/age-groups
 
 ### Response:
 
-**WORK IN PROGRESS**
+```json
+[
+	{
+		"happyAverage": 2,
+		"energyAverage": 2,
+		"hopefulnessAverage": 2,
+		"sleepAverage": 2,
+		"ageGroup": "0-10"
+	},
+	{
+		"happyAverage": 3,
+		"energyAverage": 2,
+		"hopefulnessAverage": 2,
+		"sleepAverage": 5,
+		"ageGroup": "51-70"
+	}
+]
+```
