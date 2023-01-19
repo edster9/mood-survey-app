@@ -219,25 +219,31 @@ const peopleSurvey = async (
 		},
 	)
 
+	// get the new person created/updated because of last survey
 	const newPerson: People = (await getOne(personId)) as People
 
+	// prepare the result data for this api
 	const result: PeopleAgeCompare = {
 		person: newPerson,
 	}
 
+	// add the previous survey from this person (if any)
 	const previousSurvey = await getPreviousSruvey(
 		personId,
 		newPerson.lastSurveyTime,
 	)
+
 	if (previousSurvey) {
 		result.previousSurvey = previousSurvey
 	}
 
+	// compare to others in the same age group
 	const ownAgeGroup = await compareByAge(personId, newPerson.age)
 	if (ownAgeGroup) {
 		result.ownAgeGroup = ownAgeGroup
 	}
 
+	// compare to all other age groups if specified in the api request
 	if (survey.compareToAll) {
 		const otherAgeGroups = await compareByAgeGroups(personId)
 
@@ -246,6 +252,7 @@ const peopleSurvey = async (
 		}
 	}
 
+	// return the result
 	return result
 }
 
