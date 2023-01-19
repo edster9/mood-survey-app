@@ -28,6 +28,8 @@ const SurveyResultTabs = (props: SurveyResultProps) => {
 		const previousSurvey = props.peopleAgeCompare.previousSurvey
 		const ownAgeGroup = props.peopleAgeCompare.ownAgeGroup
 
+		//console.log('otherAgeGroups', otherAgeGroups)
+
 		return (
 			<Tabs
 				defaultActiveKey="profile"
@@ -39,7 +41,7 @@ const SurveyResultTabs = (props: SurveyResultProps) => {
 				}}
 			>
 				<Tab eventKey="last-survey" title="Last mood survey">
-					<h6>Full Name: {props.peopleAgeCompare.person.fullName}</h6>
+					<h6>Full Name: {person.fullName}</h6>
 					<Badge bg="secondary">Age group {person.age}</Badge>
 					<Table className="mt-3" striped bordered hover>
 						<thead>
@@ -76,7 +78,7 @@ const SurveyResultTabs = (props: SurveyResultProps) => {
 					</Table>
 				</Tab>
 				<Tab eventKey="your-age-group" title="Your age group">
-					<h6>Full Name: {props.peopleAgeCompare.person.fullName}</h6>
+					<h6>Full Name: {person.fullName}</h6>
 					<Badge bg="secondary">
 						Age group {props.peopleAgeCompare.person.age}
 					</Badge>
@@ -121,10 +123,62 @@ const SurveyResultTabs = (props: SurveyResultProps) => {
 					)}
 				</Tab>
 
-				<Tab eventKey="other-age-groups" title="Other age groups">
-					<h6>Coming Soon...</h6>
-				</Tab>
+				{renderOtherAgeGroupsTab()}
 			</Tabs>
+		)
+	}
+
+	const renderOtherAgeGroupsTab = () => {
+		const person = props.peopleAgeCompare.person
+		const otherAgeGroups = props.peopleAgeCompare.otherAgeGroups
+
+		if (!otherAgeGroups) return
+
+		return (
+			<Tab eventKey="other-age-groups" title="Other age groups">
+				<>
+					<h6>Full Name: {person.fullName}</h6>
+
+					{otherAgeGroups.map((otherAgeGroup) => {
+						return (
+							<div>
+								<Badge bg="secondary">Age group {otherAgeGroup.ageGroup}</Badge>
+								<Table className="mt-3" striped bordered hover>
+									<thead>
+										<tr>
+											<th>Category</th>
+											<th>Last Survey</th>
+											<th>Age Group Average</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Happiness</td>
+											<td>{person.happyScale}</td>
+											<td>{otherAgeGroup.happyAverage}</td>
+										</tr>
+										<tr>
+											<td>Energy</td>
+											<td>{person.energyScale}</td>
+											<td>{otherAgeGroup.energyAverage}</td>
+										</tr>
+										<tr>
+											<td>Hopefulness</td>
+											<td>{person.hopefulnessScale}</td>
+											<td>{otherAgeGroup.hopefulnessAverage}</td>
+										</tr>
+										<tr>
+											<td>Sleep Time</td>
+											<td>{person.sleepHours}</td>
+											<td>{otherAgeGroup.sleepAverage}</td>
+										</tr>
+									</tbody>
+								</Table>
+							</div>
+						)
+					})}
+				</>
+			</Tab>
 		)
 	}
 
