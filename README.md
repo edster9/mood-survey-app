@@ -72,6 +72,10 @@ Validation on the backend API is done using class-validator DTO design that defi
 
 Each new mood survey is keyed based on the (full name / birthday) columns. Two entries with the same name but different birthdays will be considered two unique users.
 
+### Data and Averge units
+
+Date is collected as whole numbers and all averages are calcualted and rounded to whole numbers.
+
 ### Database Tables (ERD)
 
 ```mermaid

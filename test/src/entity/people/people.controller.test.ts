@@ -15,7 +15,7 @@ describe('POST /people/survey', () => {
 		expect(response.statusCode).toBe(400)
 	})
 
-	test('create a new mood survey for a 40 year old', async () => {
+	test('Ed Wood - 40 years old) create a new mood survey', async () => {
 		// calculate the birthday for 40 years old
 		const personAge = DateTime.now()
 			.minus({ years: 40 })
@@ -24,10 +24,10 @@ describe('POST /people/survey', () => {
 		const response = await request(app).post('/people/survey').send({
 			fullName: 'Ed Wood 40',
 			birthday: personAge.toISO(),
-			happyScale: 1,
-			energyScale: 1,
-			hopefulnessScale: 1,
-			sleepHours: 1,
+			happyScale: 2,
+			energyScale: 2,
+			hopefulnessScale: 2,
+			sleepHours: 8,
 			compareToAll: false,
 		})
 
@@ -40,20 +40,20 @@ describe('POST /people/survey', () => {
 				id: 1,
 				fullName: 'Ed Wood 40',
 				birthday: personAge.toISO(),
-				happyScale: 1,
-				happyAverage: 1,
-				energyScale: 1,
-				energyAverage: 1,
-				hopefulnessScale: 1,
-				hopefulnessAverage: 1,
-				sleepHours: 1,
-				sleepAverage: 1,
+				happyScale: 2,
+				happyAverage: 2,
+				energyScale: 2,
+				energyAverage: 2,
+				hopefulnessScale: 2,
+				hopefulnessAverage: 2,
+				sleepHours: 8,
+				sleepAverage: 8,
 				age: 40,
 			},
 		})
 	})
 
-	test('(Jane Smith) 30 year old with no previous survey date and no age groups yet to compare to', async () => {
+	test('(Jane Smith - 30 year old) with no previous survey date and no age groups yet to compare to', async () => {
 		// calculate the birthday for 30 years old
 		const personAge = DateTime.now()
 			.minus({ years: 30 })
@@ -62,10 +62,10 @@ describe('POST /people/survey', () => {
 		const response = await request(app).post('/people/survey').send({
 			fullName: 'Jane Smith 30',
 			birthday: personAge.toISO(),
-			happyScale: 1,
-			energyScale: 1,
-			hopefulnessScale: 1,
-			sleepHours: 1,
+			happyScale: 4,
+			energyScale: 4,
+			hopefulnessScale: 4,
+			sleepHours: 4,
 			compareToAll: false,
 		})
 
@@ -78,20 +78,20 @@ describe('POST /people/survey', () => {
 				id: 2,
 				fullName: 'Jane Smith 30',
 				birthday: personAge.toISO(),
-				happyScale: 1,
-				happyAverage: 1,
-				energyScale: 1,
-				energyAverage: 1,
-				hopefulnessScale: 1,
-				hopefulnessAverage: 1,
-				sleepHours: 1,
-				sleepAverage: 1,
+				happyScale: 4,
+				happyAverage: 4,
+				energyScale: 4,
+				energyAverage: 4,
+				hopefulnessScale: 4,
+				hopefulnessAverage: 4,
+				sleepHours: 4,
+				sleepAverage: 4,
 				age: 30,
 			},
 		})
 	})
 
-	test('(John Smith) 30 year old with no previous survey date but with compare to existing age groups', async () => {
+	test('(John Smith - 30 year old) with no previous survey date but with compare to existing age groups', async () => {
 		// calculate the birthday for 30 years old
 		const personAge = DateTime.now()
 			.minus({ years: 30 })
@@ -100,10 +100,10 @@ describe('POST /people/survey', () => {
 		const response = await request(app).post('/people/survey').send({
 			fullName: 'John Smith 30',
 			birthday: personAge.toISO(),
-			happyScale: 1,
-			energyScale: 1,
-			hopefulnessScale: 1,
-			sleepHours: 1,
+			happyScale: 2,
+			energyScale: 2,
+			hopefulnessScale: 2,
+			sleepHours: 8,
 			compareToAll: false,
 		})
 
@@ -116,27 +116,27 @@ describe('POST /people/survey', () => {
 				id: 3,
 				fullName: 'John Smith 30',
 				birthday: personAge.toISO(),
-				happyScale: 1,
-				happyAverage: 1,
-				energyScale: 1,
-				energyAverage: 1,
-				hopefulnessScale: 1,
-				hopefulnessAverage: 1,
-				sleepHours: 1,
-				sleepAverage: 1,
+				happyScale: 2,
+				happyAverage: 2,
+				energyScale: 2,
+				energyAverage: 2,
+				hopefulnessScale: 2,
+				hopefulnessAverage: 2,
+				sleepHours: 8,
+				sleepAverage: 8,
 				age: 30,
 			},
 			ownAgeGroup: {
 				ageGroup: '30',
-				energyAverage: 1,
-				happyAverage: 1,
-				hopefulnessAverage: 1,
-				sleepAverage: 1,
+				energyAverage: 4,
+				happyAverage: 4,
+				hopefulnessAverage: 4,
+				sleepAverage: 4,
 			},
 		})
 	})
 
-	test('2nd entry for (John Smith) 30 year old with previous survey date and with compare to existing age groups', async () => {
+	test('2nd entry for (John Smith - 30 year old) with previous survey date and with compare to existing age groups', async () => {
 		// calculate the birthday for 30 years old
 		const personAge = DateTime.now()
 			.minus({ years: 30 })
@@ -145,10 +145,10 @@ describe('POST /people/survey', () => {
 		const response = await request(app).post('/people/survey').send({
 			fullName: 'John Smith 30',
 			birthday: personAge.toISO(),
-			happyScale: 1,
-			energyScale: 1,
-			hopefulnessScale: 1,
-			sleepHours: 1,
+			happyScale: 4,
+			energyScale: 4,
+			hopefulnessScale: 4,
+			sleepHours: 4,
 			compareToAll: false,
 		})
 
@@ -162,35 +162,35 @@ describe('POST /people/survey', () => {
 				id: 3,
 				fullName: 'John Smith 30',
 				birthday: personAge.toISO(),
-				happyScale: 1,
-				happyAverage: 1,
-				energyScale: 1,
-				energyAverage: 1,
-				hopefulnessScale: 1,
-				hopefulnessAverage: 1,
-				sleepHours: 1,
-				sleepAverage: 1,
+				happyScale: 4,
+				happyAverage: 3,
+				energyScale: 4,
+				energyAverage: 3,
+				hopefulnessScale: 4,
+				hopefulnessAverage: 3,
+				sleepHours: 4,
+				sleepAverage: 6,
 				age: 30,
 			},
 			previousSurvey: {
-				energyScale: 1,
-				happyScale: 1,
-				hopefulnessScale: 1,
+				energyScale: 2,
+				happyScale: 2,
+				hopefulnessScale: 2,
 				id: 3,
 				peopleId: 3,
-				sleepHours: 1,
+				sleepHours: 8,
 			},
 			ownAgeGroup: {
 				ageGroup: '30',
-				energyAverage: 1,
-				happyAverage: 1,
-				hopefulnessAverage: 1,
-				sleepAverage: 1,
+				energyAverage: 4,
+				happyAverage: 4,
+				hopefulnessAverage: 4,
+				sleepAverage: 4,
 			},
 		})
 	})
 
-	test('create a mood survey for a 25 year old (Bob Smith)', async () => {
+	test('(Bob Smith - 25 year old) create a mood survey', async () => {
 		// calculate the birthday for 25 years old
 		const personAge = DateTime.now()
 			.minus({ years: 25 })
@@ -199,10 +199,10 @@ describe('POST /people/survey', () => {
 		const response = await request(app).post('/people/survey').send({
 			fullName: 'Bob Smith 25',
 			birthday: personAge.toISO(),
-			happyScale: 1,
-			energyScale: 1,
-			hopefulnessScale: 1,
-			sleepHours: 1,
+			happyScale: 3,
+			energyScale: 3,
+			hopefulnessScale: 3,
+			sleepHours: 3,
 			compareToAll: false,
 		})
 
@@ -215,14 +215,14 @@ describe('POST /people/survey', () => {
 				id: 4,
 				fullName: 'Bob Smith 25',
 				birthday: personAge.toISO(),
-				happyScale: 1,
-				happyAverage: 1,
-				energyScale: 1,
-				energyAverage: 1,
-				hopefulnessScale: 1,
-				hopefulnessAverage: 1,
-				sleepHours: 1,
-				sleepAverage: 1,
+				happyScale: 3,
+				happyAverage: 3,
+				energyScale: 3,
+				energyAverage: 3,
+				hopefulnessScale: 3,
+				hopefulnessAverage: 3,
+				sleepHours: 3,
+				sleepAverage: 3,
 				age: 25,
 			},
 		})
@@ -237,10 +237,10 @@ describe('POST /people/survey', () => {
 		const response = await request(app).post('/people/survey').send({
 			fullName: 'Bob Dole 90',
 			birthday: personAge.toISO(),
-			happyScale: 1,
-			energyScale: 1,
-			hopefulnessScale: 1,
-			sleepHours: 1,
+			happyScale: 5,
+			energyScale: 5,
+			hopefulnessScale: 5,
+			sleepHours: 5,
 			compareToAll: true,
 		})
 
@@ -253,30 +253,30 @@ describe('POST /people/survey', () => {
 				id: 5,
 				fullName: 'Bob Dole 90',
 				birthday: personAge.toISO(),
-				happyScale: 1,
-				happyAverage: 1,
-				energyScale: 1,
-				energyAverage: 1,
-				hopefulnessScale: 1,
-				hopefulnessAverage: 1,
-				sleepHours: 1,
-				sleepAverage: 1,
+				happyScale: 5,
+				happyAverage: 5,
+				energyScale: 5,
+				energyAverage: 5,
+				hopefulnessScale: 5,
+				hopefulnessAverage: 5,
+				sleepHours: 5,
+				sleepAverage: 5,
 				age: 90,
 			},
 			otherAgeGroups: [
 				{
 					ageGroup: '22-30',
-					energyAverage: 1,
-					happyAverage: 1,
-					hopefulnessAverage: 1,
-					sleepAverage: 1,
+					energyAverage: 3,
+					happyAverage: 3,
+					hopefulnessAverage: 3,
+					sleepAverage: 4,
 				},
 				{
 					ageGroup: '31-40',
-					energyAverage: 1,
-					happyAverage: 1,
-					hopefulnessAverage: 1,
-					sleepAverage: 1,
+					energyAverage: 2,
+					happyAverage: 2,
+					hopefulnessAverage: 2,
+					sleepAverage: 8,
 				},
 			],
 		})
@@ -316,7 +316,7 @@ describe('GET /people/:id/compare/age', () => {
 		expect(response.statusCode).toBe(400)
 	})
 
-	test('compare (Ed Wood 40) years old to others in same age group, should be no others in same age group', async () => {
+	test('compare (Ed Wood 40 - years old) to others in same age group, should be no others in same age group', async () => {
 		const response = await request(app).get('/people/1/compare/age')
 
 		expect(response.body).toEqual({})
@@ -328,10 +328,10 @@ describe('GET /people/:id/compare/age', () => {
 
 		expect(response.body).toEqual({
 			ageGroup: '30',
-			energyAverage: 1,
-			happyAverage: 1,
-			hopefulnessAverage: 1,
-			sleepAverage: 1,
+			energyAverage: 3,
+			happyAverage: 3,
+			hopefulnessAverage: 3,
+			sleepAverage: 6,
 		})
 		expect(response.statusCode).toBe(200)
 	})
@@ -372,22 +372,22 @@ describe('GET /people/:id/compare/age-groups', () => {
 		expect(response.statusCode).toBe(400)
 	})
 
-	test('compare (Ed Wood 40) years old to other age groups', async () => {
+	test('compare (Jane Smith 30 - year old) to other age groups', async () => {
 		const response = await request(app).get('/people/2/compare/age-groups')
 
 		expect(response.body).toEqual([
 			{
-				happyAverage: 1,
-				energyAverage: 1,
-				hopefulnessAverage: 1,
-				sleepAverage: 1,
+				happyAverage: 3,
+				energyAverage: 3,
+				hopefulnessAverage: 3,
+				sleepAverage: 5,
 				ageGroup: '22-30',
 			},
 			{
-				happyAverage: 1,
-				energyAverage: 1,
-				hopefulnessAverage: 1,
-				sleepAverage: 1,
+				happyAverage: 5,
+				energyAverage: 5,
+				hopefulnessAverage: 5,
+				sleepAverage: 5,
 				ageGroup: '71-Infinity',
 			},
 		])
@@ -395,7 +395,7 @@ describe('GET /people/:id/compare/age-groups', () => {
 		expect(response.statusCode).toBe(200)
 	})
 
-	test('compare (Bob Dole 90) years old to other age groups when no other age groups exists', async () => {
+	test('compare (Bob Dole 90 - year old) years old to other age groups when no other age groups exists', async () => {
 		await request(app).delete('/people/2')
 		await request(app).delete('/people/3')
 		await request(app).delete('/people/4')
